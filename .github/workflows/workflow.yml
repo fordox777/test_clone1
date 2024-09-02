@@ -1,8 +1,11 @@
 name: Build_and_run_test
 
 on:
+  workflow_dispatch:
   push:
-    branches: [master, test1, test2]
+    branches:
+      - master
+      - dev
 
 jobs:
   build_and_run_test:
