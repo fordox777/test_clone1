@@ -22,7 +22,7 @@ jobs:
           distribution: 'corretto'
 
       - name: Build
-        run: mvn clean package -DskipTests
+        run: mvn1 clean package -DskipTests
 
       - name: Tests
         run: mvn test
