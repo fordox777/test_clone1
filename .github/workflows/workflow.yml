@@ -28,6 +28,7 @@ jobs:
         run: mvn test
 
   deploy:
+    needs: build_and_run_test
     runs-on: ubuntu-latest
 
     steps:
