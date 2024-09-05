@@ -34,16 +34,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+      - name: Install WireGuard
+        run: sudo apt-get update && sudo apt-get install -y wireguard
 
-      - name: Add VPS to known_hosts
+      - name: Configure WireGuard
         run: |
-          ssh-keyscan -H 46.205.205.4 >> ~/.ssh/known_hosts
+          echo "${{ secrets.WG_CLIENT_PRIVATE_KEY }}" > client_privatekey
+          sudo chmod 600 client_privatekey
 
-      - name: Deploy to VPS
+          sudo tee /etc/wireguard/wg0.conf > /dev/null <<EOT
+          [Interface]
+          PrivateKey = $(cat client_privatekey)
+          Address = 10.0.0.2/24
+
+          [Peer]
+          PublicKey = wDGJJJdtmIAscwX78pcxK5itAck1vX3DV7aT6H3N61I=
+          Endpoint = ${{ secrets.VPN_SERVER_IP }}:51820
+          AllowedIPs = 0.0.0.0/0
+          PersistentKeepalive = 25
+          EOT
+
+          sudo wg-quick up wg0
+
+      - name: Deploy to VPS over VPN
         run: |
-          ssh user@46.205.205.4 'bash -s' < ./deploy.sh
+          ssh user@10.0.0.1 'bash -s' < ./deploy.sh
