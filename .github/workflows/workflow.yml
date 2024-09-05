@@ -48,7 +48,7 @@ jobs:
           Address = 10.0.0.2/24
 
           [Peer]
-          PublicKey = wDGJJJdtmIAscwX78pcxK5itAck1vX3DV7aT6H3N61I=
+          PublicKey = Pkn+JmxsALijCINMu8UCzWz2T1VMaurF+OiVYD0EGWk=
           Endpoint = ${{ secrets.VPN_SERVER_IP }}:51820
           AllowedIPs = 0.0.0.0/0
           PersistentKeepalive = 25
